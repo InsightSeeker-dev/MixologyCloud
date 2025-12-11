@@ -15,7 +15,9 @@ data class FirebaseUiState(
     val remoteConfig: RemoteConfigData? = null,
     val fcmToken: String? = null,
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val isSubscribed: Boolean = false,
+    val successMessage: String? = null
 )
 
 @HiltViewModel
@@ -72,6 +74,10 @@ class FirebaseViewModel @Inject constructor(
         viewModelScope.launch {
             firebaseRepository.subscribeToTopic("mixology_updates")
                 .onSuccess {
+                    _uiState.value = _uiState.value.copy(
+                        isSubscribed = true,
+                        successMessage = "Abonné aux notifications avec succès!"
+                    )
                 }
                 .onFailure { exception ->
                     _uiState.value = _uiState.value.copy(error = exception.message)
@@ -79,7 +85,11 @@ class FirebaseViewModel @Inject constructor(
         }
     }
     
+    fun refreshRemoteConfig() {
+        loadRemoteConfig()
+    }
+    
     fun clearError() {
-        _uiState.value = _uiState.value.copy(error = null)
+        _uiState.value = _uiState.value.copy(error = null, successMessage = null)
     }
 }

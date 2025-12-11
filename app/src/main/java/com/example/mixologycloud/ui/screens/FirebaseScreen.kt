@@ -12,9 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -50,9 +53,13 @@ fun FirebaseScreen(
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     
-    LaunchedEffect(uiState.error) {
+    LaunchedEffect(uiState.error, uiState.successMessage) {
         uiState.error?.let { error ->
             snackbarHostState.showSnackbar(error)
+            viewModel.clearError()
+        }
+        uiState.successMessage?.let { message ->
+            snackbarHostState.showSnackbar(message)
             viewModel.clearError()
         }
     }
@@ -73,6 +80,11 @@ fun FirebaseScreen(
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { viewModel.refreshRemoteConfig() }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Refresh")
                     }
                 }
             )
@@ -147,6 +159,17 @@ fun FirebaseScreen(
                             text = if (uiState.remoteConfig?.featureEnabled == true) "Oui" else "Non",
                             style = MaterialTheme.typography.bodyLarge
                         )
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        OutlinedButton(
+                            onClick = { viewModel.refreshRemoteConfig() },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(Icons.Default.Refresh, contentDescription = null)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Actualiser Remote Config")
+                        }
                     }
                 }
                 
@@ -177,31 +200,16 @@ fun FirebaseScreen(
                         
                         Button(
                             onClick = { viewModel.subscribeToNotifications() },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = !uiState.isSubscribed
                         ) {
-                            Text("S'abonner aux notifications")
+                            Text(
+                                if (uiState.isSubscribed) 
+                                    "✓ Abonné aux notifications" 
+                                else 
+                                    "S'abonner aux notifications"
+                            )
                         }
-                    }
-                }
-                
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer
-                    )
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = "ℹ️ Architecture Propre",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Firebase est intégré via FirebaseRepository dans la couche Data. " +
-                                    "Le ViewModel consomme uniquement des données exposées par le Repository.",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
                     }
                 }
             }

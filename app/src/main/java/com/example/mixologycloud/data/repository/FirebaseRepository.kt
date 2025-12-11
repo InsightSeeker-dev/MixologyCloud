@@ -22,7 +22,7 @@ class FirebaseRepository @Inject constructor(
     
     init {
         val configSettings = FirebaseRemoteConfigSettings.Builder()
-            .setMinimumFetchIntervalInSeconds(3600)
+            .setMinimumFetchIntervalInSeconds(60)
             .build()
         remoteConfig.setConfigSettingsAsync(configSettings)
         
