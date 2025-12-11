@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
@@ -26,6 +27,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -53,7 +55,8 @@ import com.example.mixologycloud.ui.viewmodel.CocktailListViewModel
 @Composable
 fun CocktailListScreen(
     viewModel: CocktailListViewModel = hiltViewModel(),
-    onNavigateToCocktailDetail: (String) -> Unit
+    onNavigateToCocktailDetail: (String) -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -68,7 +71,12 @@ fun CocktailListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Cocktails Collection") }
+                title = { Text("Cocktails Collection") },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -132,7 +140,8 @@ fun CocktailListScreen(
                 CocktailList(
                     groupedCocktails = uiState.groupedCocktails,
                     totalCount = uiState.totalCount,
-                    onCocktailClick = onNavigateToCocktailDetail
+                    onCocktailClick = onNavigateToCocktailDetail,
+                    onDeleteCocktail = { cocktailId -> viewModel.deleteCocktail(cocktailId) }
                 )
             }
         }
@@ -143,7 +152,8 @@ fun CocktailListScreen(
 fun CocktailList(
     groupedCocktails: Map<String, List<CocktailUi>>,
     totalCount: Int,
-    onCocktailClick: (String) -> Unit
+    onCocktailClick: (String) -> Unit,
+    onDeleteCocktail: (String) -> Unit
 ) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
@@ -163,7 +173,8 @@ fun CocktailList(
             items(cocktails) { cocktail ->
                 CocktailItem(
                     cocktail = cocktail,
-                    onClick = { onCocktailClick(cocktail.id) }
+                    onClick = { onCocktailClick(cocktail.id) },
+                    onDelete = { onDeleteCocktail(cocktail.id) }
                 )
             }
         }
@@ -191,7 +202,8 @@ fun CocktailList(
 @Composable
 fun CocktailItem(
     cocktail: CocktailUi,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDelete: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -233,6 +245,14 @@ fun CocktailItem(
                     text = cocktail.alcoholic,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.secondary
+                )
+            }
+            
+            IconButton(onClick = onDelete) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete",
+                    tint = MaterialTheme.colorScheme.error
                 )
             }
         }

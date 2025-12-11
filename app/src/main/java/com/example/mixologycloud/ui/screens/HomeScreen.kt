@@ -60,7 +60,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(16.dp))
             
             Text(
-                text = "• [Nom Membre 1]\n• [Nom Membre 2]",
+                text = "• [Dynastie AMOUSSOU]\n• [Mosleh Snoussi]",
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center
             )

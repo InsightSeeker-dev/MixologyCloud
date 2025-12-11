@@ -44,6 +44,10 @@ class CocktailRepository @Inject constructor(
         cocktailDao.deleteAllCocktails()
     }
     
+    suspend fun deleteCocktailById(cocktailId: String) {
+        cocktailDao.deleteCocktailById(cocktailId)
+    }
+    
     fun getCocktailCount(): Flow<Int> {
         return cocktailDao.getCocktailCount()
     }

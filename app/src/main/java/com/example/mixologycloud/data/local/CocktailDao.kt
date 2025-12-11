@@ -21,6 +21,9 @@ interface CocktailDao {
     @Query("DELETE FROM cocktails")
     suspend fun deleteAllCocktails()
     
+    @Query("DELETE FROM cocktails WHERE id = :cocktailId")
+    suspend fun deleteCocktailById(cocktailId: String)
+    
     @Query("SELECT COUNT(*) FROM cocktails")
     fun getCocktailCount(): Flow<Int>
 }

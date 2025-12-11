@@ -57,12 +57,14 @@ fun FirebaseScreen(
         }
     }
     
-    val primaryColor = try {
-        uiState.remoteConfig?.primaryColor?.let { Color(it.toColorInt()) }
-            ?: MaterialTheme.colorScheme.primary
-    } catch (e: Exception) {
-        MaterialTheme.colorScheme.primary
+    val parsedColor = remember(uiState.remoteConfig?.primaryColor) {
+        try {
+            uiState.remoteConfig?.primaryColor?.let { Color(it.toColorInt()) }
+        } catch (e: Exception) {
+            null
+        }
     }
+    val primaryColor = parsedColor ?: MaterialTheme.colorScheme.primary
     
     Scaffold(
         topBar = {

@@ -41,7 +41,8 @@ fun NavGraph(navController: NavHostController) {
             CocktailListScreen(
                 onNavigateToCocktailDetail = { cocktailId ->
                     navController.navigate(Screen.CocktailDetail.createRoute(cocktailId))
-                }
+                },
+                onNavigateBack = { navController.popBackStack() }
             )
         }
         

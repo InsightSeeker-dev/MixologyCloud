@@ -93,6 +93,16 @@ class CocktailListViewModel @Inject constructor(
         }
     }
     
+    fun deleteCocktail(cocktailId: String) {
+        viewModelScope.launch {
+            try {
+                cocktailRepository.deleteCocktailById(cocktailId)
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(error = e.message)
+            }
+        }
+    }
+    
     fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
     }
