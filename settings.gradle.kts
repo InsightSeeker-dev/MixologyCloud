@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ShakeItAndroid"
+rootProject.name = "MixologyCloud"
 include(":app")
  

@@ -132,6 +132,16 @@ cd MixologyCloud
 - **Separation of Concerns**
 - **Clean Architecture**
 
+## 📚 Documentation Complète
+
+Pour plus de détails, consultez la documentation dans le dossier **[`docs/`](docs/)**:
+
+- **[QUICKSTART.md](docs/QUICKSTART.md)** - Guide de démarrage rapide (5 min)
+- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Architecture détaillée
+- **[CHECKLIST.md](docs/CHECKLIST.md)** - Checklist de validation
+- **[PATTERNS.md](docs/PATTERNS.md)** - Design patterns utilisés
+- **[SUMMARY.md](docs/SUMMARY.md)** - Résumé exécutif
+
 ## 📄 License
 
 Projet étudiant - Tous droits réservés
