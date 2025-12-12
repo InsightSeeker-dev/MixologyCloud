@@ -66,7 +66,15 @@ fun FirebaseScreen(
     
     val parsedColor = remember(uiState.remoteConfig?.primaryColor) {
         try {
-            uiState.remoteConfig?.primaryColor?.let { Color(it.toColorInt()) }
+            uiState.remoteConfig?.primaryColor?.let { colorString ->
+                // Ajouter le canal alpha si nécessaire (#RRGGBB -> #AARRGGBB)
+                val colorWithAlpha = if (colorString.startsWith("#") && colorString.length == 7) {
+                    "#FF${colorString.substring(1)}"
+                } else {
+                    colorString
+                }
+                Color(colorWithAlpha.toColorInt())
+            }
         } catch (e: Exception) {
             null
         }
